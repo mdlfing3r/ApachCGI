@@ -15,11 +15,13 @@
     class mainFunc : public SimpleHTTPConstruct::SimpleHTTPConstruct {
     public:
         static void RunMainFunc(void);
+		static std::map<std::string, std::string> GetCookies();
     };
 
 
     void mainFunc::RunMainFunc() {
-        std::wcout << AsIs(L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n"));
+		auto cookie = GetCookies();
+		std::wcout << AsIs(L"Content-Type: text/html; charset=utf-8" + std::wstring(L"\n\n"));
 
         std::wcout <<
             AsIs(L"<!DOCTYPE HTML>") +
@@ -34,9 +36,13 @@
                         AsIs(L"<h1 align = \"center\" > For continue enter your Account data </h1>\n") +
                         Paragrah(L"align = \"center\"",
                             Paragrah(L"", L"Логин") +
-                            AsIs(L"<input name = \"text\"> ") +
+                            AsIs(L"<input name = \"text\" value =\"") +
+							StringToWString(cookie["name"])+
+							AsIs(L"\"> ") +
                             Paragrah(L"", L"Пароль") +
-                            AsIs(L"<input name = \"pass\">")
+                            AsIs(L"<input name = \"pass\" value =\"") +
+							StringToWString(cookie["password"])+
+							AsIs(L"\"> ")
                         ) +
                         Paragrah(L"align = \"center\"",
                             AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"Атправиц\">")
@@ -45,7 +51,32 @@
                 )
             );
     }
-
+	std::map<std::string, std::string> mainFunc::GetCookies(){
+		auto res = std::map<std::string, std::string>();
+		if (getenv("HTTP_COOKIE")){
+			std::string cookie_string = getenv("HTTP_COOKIE");
+			std::string delimiter = "; ";
+			std::string name, value;
+			size_t pos = 0, pos_ = 0;;
+			std::string token;
+			while ((pos = cookie_string.find(delimiter)) != std::string::npos) {
+				token = cookie_string.substr(0, pos);
+				pos_ = token.find("=");
+				name = token.substr(0, pos_);
+				token.erase(0, pos_+ std::string("=").length());//I suck cocks
+				value = token;
+				res.emplace(name, value);
+				cookie_string.erase(0, pos + delimiter.length());
+			}
+			token = cookie_string;
+			pos_ = token.find("=");
+			name = token.substr(0, pos_);
+			token.erase(0, pos_ + std::string("=").length());//I suck cocks
+			value = token;
+			res.emplace(name, value);
+		}
+		return res;
+	}
 
 
 
@@ -308,46 +339,72 @@
         };
 
         setlocale(LC_ALL, "Russian");
-
-        mainFunc::RunMainFunc();
         std::string body,
                     action;
-        std::getline(std::cin, body);
         action = getenv("REQUEST_URI");
+		std::string method = getenv("REQUEST_METHOD");
+		if (method == "GET" && action == "/cgi-bin/login.cgi"){
+			//std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(L"Content-Type: text/html; charset=utf-8" + std::wstring(L"\n\n"));
+			mainFunc::RunMainFunc();
+		}
+		//std::wcout << L"<br>"<< SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(action);
+		//std::wcout << L"<br>" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(method);
 
-        if (getenv("REQUEST_METHOD") != "GET" && action == "/cgi-bin/login.cgi") {
+
+        else if (method == "POST" && action == "/cgi-bin/login.cgi") {
+        std::getline(std::cin, body);
 
 #ifdef DEBUG
             std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", StringToWString(body));
 #endif
             /*std::wstring wName,
                          wPassword;*/
+			//std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(L"Content-Type: text/html; charset=utf-8" + std::wstring(L"\n\n"));
+			//mainFunc::RunMainFunc();
+			//return 0;
             std::string Name,
                         Password;
+			bool isValidNumber = false;
 
-            if (body.find('%') != body.npos)
-                std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"<font color = \"red\"> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
-            else {
-                Name = QueryTo_RawValue("text", body);
-                Password = QueryTo_RawValue("pass", body);
+			if (body.find('%') == body.npos){
+				isValidNumber = true;
+				Name = QueryTo_RawValue("text", body);
+				Password = QueryTo_RawValue("pass", body);
+				std::wcout << L"Set-Cookie: name=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Name) << std::endl;
+				std::wcout << L"Set-Cookie: password=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Password) << std::endl;
+				mainFunc::RunMainFunc();
 
-                char *cName[20],
-                     *cPassword[20];
+				char *cName[20],
+					*cPassword[20];
 
-                for (auto it = 0; it < Name.size(); it++) 
-                    *(cName + it) = &(Name.at(it));//at(it);
-                
-                for (auto it = 0; it < Password.size(); it++) 
-                    *(cPassword + it) = &(Password.at(it));//at(it);
-                
-                SHA256Crypt CrypthName(*cName);
-                SHA256Crypt CrypthPass(*cPassword);
-                //std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptName:" + StringToWString(CrypthName.Crypted) + L"<br>");
-                //std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptPassword:" + StringToWString(CrypthPass.Crypted) + L"<br>");
-                AuthService(std::make_pair(CrypthName.Crypted, CrypthPass.Crypted));
-                if(getenv("HTTP_COOKIE"))
-                    std::wcout << L"<br>Куки тут есть ";
-            }
-        };
+				for (auto it = 0; it < Name.size(); it++)
+					*(cName + it) = &(Name.at(it));//at(it);
+
+				for (auto it = 0; it < Password.size(); it++)
+					*(cPassword + it) = &(Password.at(it));//at(it);
+
+				SHA256Crypt CrypthName(*cName);
+				SHA256Crypt CrypthPass(*cPassword);
+				//std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptName:" + StringToWString(CrypthName.Crypted) + L"<br>");
+				//std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptPassword:" + StringToWString(CrypthPass.Crypted) + L"<br>");
+				AuthService(std::make_pair(CrypthName.Crypted, CrypthPass.Crypted));
+			}
+			if (!isValidNumber){
+				mainFunc::RunMainFunc();
+				std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"<font color = \"red\"> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
+			}
+    //            if(getenv("HTTP_COOKIE"))
+				//	std::wcout << L"<br>" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(getenv("HTTP_COOKIE"));
+				//else{
+				//	std::wcout << L"Set-Cookie: name=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Name) << std::endl;
+				//	std::wcout << L"Set-Cookie: password=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Password) << std::endl;
+    //        }
+        }
+		/*else {
+			std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(L"Content-Type: text/html; charset=utf-8" + std::wstring(L"\n\n"));
+			mainFunc::RunMainFunc();
+			std::wcout << L"<br> Action:"<< SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(action);
+			std::wcout << L"<br> Method:" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(method);
+		}*/
         return 0;
     }
