@@ -73,6 +73,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.cgi</TargetExt>
     <OutDir>..\..\..\..\..\..\Apache24\cgi-bin</OutDir>
+    <IncludePath>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;$(IncludePath)</IncludePath>
+    <ExternalIncludePath>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\GenericUser\Desktop\Apache\ApachCGI\ApachCGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;C:\Users\GenericUser\Desktop\Apache\ApachCGI\login;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,11 +135,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\ApachCGI\SimpleHTTPConstruct.h" />
+    <ClCompile Include="..\Common\SimpleHTTPConstruct.cpp" />
+    <ClCompile Include="login.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\ApachCGI\SimpleHTTPConstruct.cpp" />
-    <ClCompile Include="login.cpp" />
+    <ClInclude Include="..\Common\SHA256.h" />
+    <ClInclude Include="..\Common\SimpleHTTPConstruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

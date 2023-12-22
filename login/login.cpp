@@ -10,12 +10,16 @@
 #include <fstream>
 #include <map>
 #include "SHA256.h"
+#include "string"
+#include <list>
 
 
     class mainFunc : public SimpleHTTPConstruct::SimpleHTTPConstruct {
     public:
         static void RunMainFunc(void);
     };
+
+#define HTTP_methoods SimpleHTTPConstruct::SimpleHTTPConstruct
 
 
     void mainFunc::RunMainFunc() {
@@ -249,8 +253,19 @@
     }
 
 
+    void CreateNewAccount() {
+        std::wcout << 
+            HTTP_methoods::Form(L"METHOD = \"POST\" action = UserRegistration.cgi",
 
-    void AuthService(std::pair<std::string, std::string> AuthDATa) {
+                HTTP_methoods::Paragrah(L"align = \"center\"",
+                    HTTP_methoods::AsIs(L"<input type = \"submit\"; style=\"background-color: Yellow\"; value = \"Зарегистрировать нового пользователя\">")
+                )
+            );
+    }
+
+    bool AuthService(std::pair<std::string, std::string> AuthDATa) {
+
+        bool AllowLogging = false;
 
         std::string credentials;
         std::map<std::string, std::string> credentialVector;
@@ -259,11 +274,13 @@
         std::ifstream ifstr(accounts_path);
 
         if (!ifstr) {
-            std::wcout << "accounts_path file not exist<br>";
+            std::wcout << L"Конфигурационный файл не существует<br>";
 
+            //Создаем файл с AuthDATa внутри
             std::ofstream ofstr(accounts_path);
-            ofstr << AuthDATa.first << " " << AuthDATa.second;
+            ofstr << AuthDATa.first << " " << AuthDATa.second << "\n";
             ofstr.close();
+            AllowLogging = true;
         }
         else {
 
@@ -273,39 +290,40 @@
                 {
                     if (credentials != "") {
                         size_t spaceSymb = credentials.find(" ");
-                        credentialVector.emplace(credentials.substr(0, credentials.size() - spaceSymb - 1), credentials.substr(spaceSymb + 1, credentials.size() - spaceSymb));
+                        credentialVector.emplace(credentials.substr(0, spaceSymb), credentials.substr(spaceSymb + 1, credentials.size() - spaceSymb));
                         credentials.clear();
                     }
                 }
             }
+
+
             ifstr.close();
             if (!credentials.size()) {
-                if (credentialVector.find(AuthDATa.first) != credentialVector.end())
-                    std::wcout << L"Добро пожаловать";
-                else
-                    std::wcout << L"НЕ НАЙДЕН ПОЛЬЗОВАТЕЛЬ С ТАКИМИ ДАННЫМИ";
-            }
-            else {
-                std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L" Список пользователей пуст");
-            }
+                auto t = credentialVector.find(AuthDATa.first);
+                if (credentialVector.find(AuthDATa.first) != credentialVector.end()) {
 
+
+                    if (credentialVector.at(AuthDATa.first) == AuthDATa.second) {
+                        AllowLogging = true;
+                        std::wcout << L"Добро пожаловать";
+                    }
+                    else
+                        std::wcout << L"Некорректный пароль";
+                }
+                else {
+                    std::wcout << L"НЕ НАЙДЕН ПОЛЬЗОВАТЕЛЬ С ТАКИМИ ДАННЫМИ\n";
+                    CreateNewAccount();
+                    }
+            }
         }
-        
+        return AllowLogging;     
     }
 
 
+
+
     int main() {
-        enum HTTP_env {
-            COMSPEC = 0, DOCUMENT_ROOT, GATEWAY_INTERFACE,
-            HTTP_ACCEPT, HTTP_ACCEPT_ENCODING,
-            HTTP_ACCEPT_LANGUAGE, HTTP_CONNECTION,
-            HTTP_HOST, HTTP_USER_AGENT, PATH,
-            QUERY_STRING, REMOTE_ADDR, REMOTE_PORT,
-            REQUEST_METHOD, REQUEST_URI, SCRIPT_FILENAME,
-            SCRIPT_NAME, SERVER_ADDR, SERVER_ADMIN,
-            SERVER_NAME, SERVER_PORT, SERVER_PROTOCOL,
-            SERVER_SIGNATURE, SERVER_SOFTWARE
-        };
+
 
         setlocale(LC_ALL, "Russian");
 
@@ -317,36 +335,25 @@
 
         if (getenv("REQUEST_METHOD") != "GET" && action == "/cgi-bin/login.cgi") {
 
-#ifdef DEBUG
-            std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", StringToWString(body));
-#endif
-            /*std::wstring wName,
-                         wPassword;*/
             std::string Name,
                         Password;
 
+            char* cPassword[20];
+
+
             if (body.find('%') != body.npos)
-                std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"<font color = \"red\"> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
+                std::wcout << HTTP_methoods::Paragrah(L"", L"<font color = \"red\"> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
             else {
                 Name = QueryTo_RawValue("text", body);
                 Password = QueryTo_RawValue("pass", body);
 
-                char *cName[20],
-                     *cPassword[20];
 
-                for (auto it = 0; it < Name.size(); it++) 
-                    *(cName + it) = &(Name.at(it));//at(it);
-                
                 for (auto it = 0; it < Password.size(); it++) 
-                    *(cPassword + it) = &(Password.at(it));//at(it);
-                
-                SHA256Crypt CrypthName(*cName);
+                    *(cPassword + it) = &(Password.at(it));
+
                 SHA256Crypt CrypthPass(*cPassword);
-                //std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptName:" + StringToWString(CrypthName.Crypted) + L"<br>");
-                //std::wcout << SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(L"", L"CryptPassword:" + StringToWString(CrypthPass.Crypted) + L"<br>");
-                AuthService(std::make_pair(CrypthName.Crypted, CrypthPass.Crypted));
-                if(getenv("HTTP_COOKIE"))
-                    std::wcout << L"<br>Куки тут есть ";
+
+                AuthService(std::make_pair(Name, CrypthPass.Crypted));
             }
         };
         return 0;
