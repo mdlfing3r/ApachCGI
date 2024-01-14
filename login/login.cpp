@@ -14,6 +14,8 @@
 #include <list>
 
 
+    static uint8_t AunthSt;
+
     class mainFunc : public SimpleHTTPConstruct::SimpleHTTPConstruct {
     public:
         static void RunMainFunc(void);
@@ -22,32 +24,22 @@
 #define HTTP_methoods SimpleHTTPConstruct::SimpleHTTPConstruct
 
 
+
     void mainFunc::RunMainFunc() {
+
         std::wcout << AsIs(L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n"));
 
         std::wcout <<
             AsIs(L"<!DOCTYPE HTML>") +
-
             HTML(L"",
                 Head(L"",
                     L"<meta encoding = \"windows-1251\">" +
-                    AsIs(L"\n<title> login page </title>") 
-                ) +
-                Body(L"align = \"center\"",
-                    Form(L"METHOD = \"POST\"",
-                        AsIs(L"<h1 align = \"center\" > For continue enter your Account data </h1>\n") +
-                        Paragrah(L"align = \"center\"",
-                            Paragrah(L"", L"Логин") +
-                            AsIs(L"<input name = \"text\"> ") +
-                            Paragrah(L"", L"Пароль") +
-                            AsIs(L"<input name = \"pass\">")
-                        ) +
-                        Paragrah(L"align = \"center\"",
-                            AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"Атправиц\">")
-                        )
-                    )
-                )
+                    AsIs(L"\n<title> Авторизация </title>")
+                )+
+                Body(L"align = \"center\"", L"<br> <br> <br>")
             );
+        
+
     }
 
 
@@ -305,9 +297,14 @@
 
                     if (credentialVector.at(AuthDATa.first) == AuthDATa.second) {
                         AllowLogging = true;
-                        std::wcout << L"Добро пожаловать";
+
+                        std::wcout << HTTP_methoods::AsIs(L"<p style=\"color: green\";> Добро пожаловать!, для продолжения нажмите клавишу ПРОДОЛЖИТЬ </p>") <<
+
+                            HTTP_methoods::Paragrah(L"align = \"center\"",
+                                HTTP_methoods::Form(L"METHOD = \"POST\" action = FlightParams.cgi",
+                                        HTTP_methoods::AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"ПРОДОЛЖИТЬ\">")));
                     }
-                    else
+                    else 
                         std::wcout << L"Некорректный пароль";
                 }
                 else {
@@ -326,7 +323,6 @@
 
 
         setlocale(LC_ALL, "Russian");
-
         mainFunc::RunMainFunc();
         std::string body,
                     action;
@@ -353,7 +349,9 @@
 
                 SHA256Crypt CrypthPass(*cPassword);
 
-                AuthService(std::make_pair(Name, CrypthPass.Crypted));
+                if (AuthService(std::make_pair(Name, CrypthPass.Crypted))) {
+                   // mainFunc::RunMainFunc();
+                }
             }
         };
         return 0;

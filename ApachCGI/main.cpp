@@ -32,7 +32,7 @@ public:
                     Paragrah(L"align = \"center\" ",
                         Img(L"src = \"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/VQ-BEI_%286919052100%29.jpg/1200px-VQ-BEI_%286919052100%29.jpg\" alt = \"Can`t load airplane image\" width = \"500\"")
                     ) +
-                    Form(L"METHOD=\"POST\" action = login.cgi",
+                    Form(L"METHOD=\"POST\" action = Autorization.cgi",
                         Paragrah(L"align = \"center\"",
                             AsIs(L"<input type = \"submit\" value=\"By a Fli-Ticket for lowest price\"  style=\"background: rgb(102, 247, 102); border-radius: 0.1cm; width: 10cm;\" > ")
                             
