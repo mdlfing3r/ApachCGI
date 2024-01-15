@@ -36,7 +36,7 @@ void mainFunc::RunMainFunc() {
                 AsIs(L"\n<title> Авторизация </title>")
             ) +
             Body(L"align = \"center\"",
-                Form(L"METHOD = \"POST\" action = login.cgi",
+                Form(L"METHOD = \"POST\" action = AeroPhlot.cgi",
                     AsIs(L"<h1 align = \"center\" > For continue enter your Account data </h1>\n") +
                     Paragrah(L"align = \"center\"",
                         Paragrah(L"", L"Логин") +

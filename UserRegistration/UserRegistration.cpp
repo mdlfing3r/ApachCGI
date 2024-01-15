@@ -4,7 +4,6 @@
 
 #include "SimpleHTTPConstruct.h"
 #include <iostream>
-#include <vector>
 #include <set>
 #include <string>
 #include <fstream>
@@ -45,7 +44,7 @@ void mainFunc::RunMainFunc() {
                         AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"Создать\">")
                     )
                 )+
-                Form(L"METHOD = \"POST\" action = login.cgi",
+                Form(L"METHOD = \"POST\" action = Autorization.cgi",
 
                     Paragrah(L"align = \"center\"",
                         AsIs(L"<input type = \"submit\"; style=\"background-color: white\"; value = \"к авторизации\">")
@@ -63,48 +62,6 @@ void mainFunc::RunMainFunc() {
 }
 
 
-
-
-std::wstring rawURLDecode(std::wstring raw) {
-    int NumCntr = 0,
-        TempNum = 0;
-
-    std::wstring loginHex,
-        passHex,
-        temp,
-        retval;
-    std::vector<int>AlphasInUint;
-
-    for (size_t it = 0; it < raw.size() + 1; it++) {
-
-        if (raw[it] != '%' && it != raw.size()) {
-            temp += raw[it];
-        }
-        else {
-            NumCntr++;
-            TempNum += std::stoi(temp, 0, 16);
-            if (NumCntr == 2) {
-                AlphasInUint.push_back(TempNum);
-                TempNum = 0;
-                NumCntr = 0;
-            }
-            temp.clear();
-            continue;
-        }
-    }
-
-    for (auto it = 0; it < AlphasInUint.size(); it++)
-    {
-        if (AlphasInUint.at(it) >= 352)
-            AlphasInUint.at(it) += 688;
-        else {
-            AlphasInUint.at(it) += 751;
-
-        }
-        retval.push_back((AlphasInUint.at(it)));
-    }
-    return retval;
-}
 
 
 std::wstring StringToWString(const std::string& s)
@@ -156,7 +113,6 @@ bool IsPersonExist(std::string Username) {
     for (auto& it : UserNames)
         NamesStr += it;
 
-   // std::wcout << HTTP_methoods::Paragrah(L"", StringToWString(NamesStr));
 
     return (UserNames.find(Username) != UserNames.end());
 }
@@ -181,7 +137,7 @@ int main() {
             Password;
 
         if (body.find('%') != body.npos)
-            std::wcout << HTTP_methoods::Paragrah(L"", L"<font color = \"red\"> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
+            std::wcout << HTTP_methoods::Paragrah(L"", L"<font> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
         else {
             Name = QueryTo_RawValue("text", body);
 
@@ -195,6 +151,12 @@ int main() {
                 std::ofstream ofstr(accounts_path, std::ios::app);
                 ofstr << Name << " " << CrypthPass.Crypted << "\n";
                 ofstr.close();
+
+
+                std::wstring success_str = L"Пользователь " + StringToWString(Name) + L" успешно добавлен!";
+                std::wcout << HTTP_methoods::Paragrah(L"", success_str);
+
+
             }
             else {
                 std::wcout << HTTP_methoods::Paragrah(L"", L"Данное имя уже занято\n");

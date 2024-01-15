@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace SimpleHTTPConstruct {
 
@@ -9,6 +10,7 @@ namespace SimpleHTTPConstruct {
 		static std::wstring Meta(std::wstring attributes = L"");
 		static std::wstring Body(std::wstring attributes, std::wstring content);
 		static std::wstring Form(std::wstring attributes, std::wstring content);
+		static std::wstring Select(std::wstring attributes, std::vector<std::wstring> options);
 		static std::wstring AsIs(std::wstring content);
 		static std::wstring Img(std::wstring params);
 		static std::wstring Head(std::wstring attributes, std::wstring content);

@@ -39,6 +39,20 @@ std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Form(std::wstring  attrib
     return L"\n<form" + (attributes == L"" ? L">" : L" "+ attributes + L" >") + content + L"</form>";
 }
 
+std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Select(std::wstring attributes, std::vector<std::wstring> options)
+{
+    std::wstring options_wstr;
+    
+    for (auto& it : options) {
+        options_wstr += L"<option value =\"" + it + L"\"> " + it + L" </option>\n";
+    }
+
+
+    return L"\n<select" + (attributes == L"" ? L">" : L" " + attributes + L" >") + options_wstr + L"</select>";
+}
+
+
+
 std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(std::wstring content)
 {
     return content;
