@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -24,7 +24,6 @@
     <ProjectGuid>{14610a2f-84fa-4393-8999-920b63c9da8e}</ProjectGuid>
     <RootNamespace>login</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>AeroPhlot</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -43,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -73,9 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.cgi</TargetExt>
-    <OutDir>..\..\..\..\..\..\Apache24\cgi-bin</OutDir>
-    <IncludePath>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;$(IncludePath)</IncludePath>
-    <ExternalIncludePath>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;$(ExternalIncludePath)</ExternalIncludePath>
+    <OutDir>C:\Apache24\cgi-bin</OutDir>
+    <IncludePath>C:\Users\Авас yuri\Documents\IPF\CGI\ApachCGI;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\GenericUser\Desktop\Apache\ApachCGI\Common;C:\Users\GenericUser\Desktop\Apache\ApachCGI\login;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\GenericUser\Desktop\Apache\ApachCGI\ApachCGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,12 +134,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\SimpleHTTPConstruct.cpp" />
-    <ClCompile Include="loginNsite.cpp" />
+    <ClInclude Include="..\ApachCGI\SimpleHTTPConstruct.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Common\SHA256.h" />
-    <ClInclude Include="..\Common\SimpleHTTPConstruct.h" />
+    <ClCompile Include="..\ApachCGI\SimpleHTTPConstruct.cpp" />
+    <ClCompile Include="login.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
