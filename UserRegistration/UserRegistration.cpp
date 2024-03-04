@@ -21,7 +21,7 @@ public:
 
 
 void mainFunc::RunMainFunc() {
-    std::wcout << AsIs(L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n"));
+    std::wcout << L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n");
 
     std::wcout <<
         AsIs(L"<!DOCTYPE HTML>") +
@@ -59,15 +59,6 @@ void mainFunc::RunMainFunc() {
                 )
             )
         );
-}
-
-
-
-
-std::wstring StringToWString(const std::string& s)
-{
-    std::wstring retWstr(s.begin(), s.end());
-    return retWstr;
 }
 
 
@@ -126,6 +117,8 @@ int main() {
     mainFunc::RunMainFunc();
     std::string body,
         action;
+
+
     std::getline(std::cin, body);
     action = getenv("REQUEST_URI");
     
@@ -145,7 +138,7 @@ int main() {
                 Password = QueryTo_RawValue("pass", body);
                 char* cPassword[20];
                 for (auto it = 0; it < Password.size(); it++)
-                    *(cPassword + it) = &(Password.at(it));//at(it);
+                    *(cPassword + it) = &(Password.at(it));
                 SHA256Crypt CrypthPass(*cPassword);
 
                 std::ofstream ofstr(accounts_path, std::ios::app);
@@ -153,7 +146,7 @@ int main() {
                 ofstr.close();
 
 
-                std::wstring success_str = L"Пользователь " + StringToWString(Name) + L" успешно добавлен!";
+                std::wstring success_str = L"Пользователь " + HTTP_methoods::StringToWString(Name) + L" успешно добавлен!";
                 std::wcout << HTTP_methoods::Paragrah(L"", success_str);
 
 

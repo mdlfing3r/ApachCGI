@@ -15,6 +15,7 @@ public:
             return Paragrah(L"", StringToWString(getenv("QUERY_STRING")) );
         }
     }
+
     static void RunMainFunc(void) {
         std::wcout << AsIs(L"Content-Type: text/html; charset=utf-8" + std::wstring(L"\n\n"));
 

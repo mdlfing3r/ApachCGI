@@ -138,10 +138,12 @@
   <ItemGroup>
     <ClCompile Include="..\Common\SimpleHTTPConstruct.cpp" />
     <ClCompile Include="loginNsite.cpp" />
+    <ClCompile Include="WebLogger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\SHA256.h" />
     <ClInclude Include="..\Common\SimpleHTTPConstruct.h" />
+    <ClInclude Include="WebLogger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

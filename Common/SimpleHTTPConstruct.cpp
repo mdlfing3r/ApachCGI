@@ -63,3 +63,70 @@ std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Img(std::wstring params)
     return L"<img " + params + L" >";
 }
 
+std::map<std::string, std::string> SimpleHTTPConstruct::SimpleHTTPConstruct::GetCookies() {
+	auto res = std::map<std::string, std::string>();
+	if (getenv("HTTP_COOKIE")) {
+		std::string cookie_string = getenv("HTTP_COOKIE");
+		std::string delimiter = "; ";
+		std::string name, value;
+		size_t pos = 0, pos_ = 0;;
+		std::string token;
+		while ((pos = cookie_string.find(delimiter)) != std::string::npos) {
+			token = cookie_string.substr(0, pos);
+			pos_ = token.find("=");
+			name = token.substr(0, pos_);
+			token.erase(0, pos_ + std::string("=").length());//I suck cocks
+			value = token;
+			res.emplace(name, value);
+			cookie_string.erase(0, pos + delimiter.length());
+		}
+		token = cookie_string;
+		pos_ = token.find("=");
+		name = token.substr(0, pos_);
+		token.erase(0, pos_ + std::string("=").length());//I suck cocks
+		value = token;
+		res.emplace(name, value);
+	}
+	return res;
+}
+
+std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::rawURLDecode(std::wstring raw) {
+    int NumCntr = 0,
+        TempNum = 0;
+
+    std::wstring loginHex,
+        passHex,
+        temp,
+        retval;
+    std::vector<int>AlphasInUint;
+
+    for (size_t it = 0; it < raw.size() + 1; it++) {
+
+        if (raw[it] != '%' && it != raw.size()) {
+            temp += raw[it];
+        }
+        else {
+            NumCntr++;
+            TempNum += std::stoi(temp, 0, 16);
+            if (NumCntr == 2) {
+                AlphasInUint.push_back(TempNum);
+                TempNum = 0;
+                NumCntr = 0;
+            }
+            temp.clear();
+            continue;
+        }
+    }
+
+    for (auto it = 0; it < AlphasInUint.size(); it++)
+    {
+        if (AlphasInUint.at(it) >= 352)
+            AlphasInUint.at(it) += 688;
+        else {
+            AlphasInUint.at(it) += 751;
+
+        }
+        retval.push_back((AlphasInUint.at(it)));
+    }
+    return retval;
+}

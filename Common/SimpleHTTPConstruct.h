@@ -1,6 +1,9 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS 
+
 #include <string>
 #include <vector>
+#include <map>
 
 namespace SimpleHTTPConstruct {
 
@@ -16,9 +19,8 @@ namespace SimpleHTTPConstruct {
 		static std::wstring Head(std::wstring attributes, std::wstring content);
 		static std::wstring HTML(std::wstring attributes, std::wstring content);
 		static std::wstring StringToWString(const std::string& s);
-
-
-
+		static std::map<std::string, std::string> GetCookies();
+		static std::wstring rawURLDecode(std::wstring raw);
 	};
 
 
