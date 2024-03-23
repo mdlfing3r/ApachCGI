@@ -28,13 +28,13 @@ std::string QueryTo_RawValue(std::string Name_var, std::string query) {
     std::string retval;
     size_t VarDev_Pos = query.find(Name_var);
 
-    if (VarDev_Pos != std::wstring::npos) {
+    if (VarDev_Pos != std::string::npos) {
         std::string tempVar = query.substr(VarDev_Pos + Name_var.size() + 1, query.size());
         retval = tempVar;
 
         auto DeviderPos = tempVar.find('&');
 
-        if (DeviderPos != std::wstring::npos) {
+        if (DeviderPos != std::string::npos) {
             retval = tempVar.substr(0, DeviderPos);
         }
     }
@@ -52,33 +52,33 @@ void mainFunc::RunMainFunc() {
 
     Name = QueryTo_RawValue("text", body);
     Password = QueryTo_RawValue("pass", body);
-    std::wcout << L"Set-Cookie: name=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Name) << std::endl;
-    std::wcout << L"Set-Cookie: password=" << SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(Password) << std::endl;
-    std::wcout << AsIs(L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n"));
+    std::cout << "Set-Cookie: name=" << Name << std::endl;
+    std::cout << "Set-Cookie: password=" << Password << std::endl;
+    std::cout << AsIs("Content-Type: text/html; charset=windows-1251" + std::string("\n\n"));
 
-    std::wcout <<
-        AsIs(L"<!DOCTYPE HTML>") +
-        HTML(L"",
-            Head(L"",
-                L"<meta encoding = \"windows-1251\">" +
-                AsIs(L"\n<title> Авторизация </title>")
+    std::cout <<
+        AsIs("<!DOCTYPE HTML>") +
+        HTML("",
+            Head("",
+                "<meta encoding = \"windows-1251\">" +
+                AsIs("\n<title> AutorizationPage </title>")
             ) +
-            Body(L"align = \"center\"",
-                Form(L"METHOD = \"POST\" action = AeroPhlot.cgi",
-                    AsIs(L"<h1 align = \"center\" > For continue enter your Account data </h1>\n") +
-                    Paragrah(L"align = \"center\"",
-                        Paragrah(L"", L"Логин") +
-                        AsIs(L"<input name = \"login\" value =\"" +
+            Body("align = \"center\"",
+                Form("METHOD = \"POST\" action = AeroPhlot.cgi",
+                    AsIs("<h1 align = \"center\" > For continue enter your Account data </h1>\n") +
+                    Paragrah("align = \"center\"",
+                        Paragrah("", "Login") +
+                        AsIs("<input name = \"login\" value =\"" +
                              StringToWString(cookie["name"] + "\"> ")
                         )+
 
-                        Paragrah(L"", L"Пароль") +
-                        AsIs(L"<input name = \"password\" value =\"" +
+                        Paragrah("", "Password") +
+                        AsIs("<input name = \"password\" value =\"" +
                              StringToWString(cookie["password"] + "\"> ")   
                         )
                     ) +
-                    Paragrah(L"align = \"center\"",
-                        AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"Вход\">")
+                    Paragrah("align = \"center\"",
+                        AsIs("<input type = \"submit\"; style=\"background-color: green\"; value = \"sign In\">")
                     )
                 )
             )
@@ -90,7 +90,6 @@ void mainFunc::RunMainFunc() {
 
 
 int main() {
-    setlocale(LC_ALL, "Russian");
     mainFunc::RunMainFunc();
     return 0;
 }

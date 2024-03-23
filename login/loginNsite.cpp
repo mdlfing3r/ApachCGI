@@ -31,13 +31,13 @@
         std::string retval;
         size_t VarDev_Pos = query.find(Name_var);
 
-        if (VarDev_Pos != std::wstring::npos) {
+        if (VarDev_Pos != std::string::npos) {
             std::string tempVar = query.substr(VarDev_Pos + Name_var.size() + 1, query.size());
             retval = tempVar;
 
             auto DeviderPos = tempVar.find('&');
 
-            if (DeviderPos != std::wstring::npos) {
+            if (DeviderPos != std::string::npos) {
                 retval = tempVar.substr(0, DeviderPos);
             }
         }
@@ -49,58 +49,52 @@
 
     void mainFunc::RunMainFunc() {
 
-        std::wcout << AsIs(L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n"));
+        std::cout << "Content-Type: text/html; charset=windows-1251\r\n\r\n";
 
-        std::wcout <<
-            AsIs(L"<!DOCTYPE HTML>\n") +
-            AsIs(L"<HTML>\n") +
-                AsIs(L"<meta encoding = \"windows-1251\">" +
-                    AsIs(L"\n<title> Авторизация </title>")
+        std::cout <<
+            AsIs("<!DOCTYPE HTML>\n") +
+            AsIs("<HTML>\n") +
+                AsIs("<meta encoding = \"windows-1251\">" +
+                    AsIs("\n<title> sign in </title>")
                 )+
-                AsIs(L"\n<body align = \"center\">\n <br> <br> <br>\n");
+                AsIs("\n<body align = \"center\">\n <br> <br> <br>\n");
     }
 
 
     void siteLogicRun(std::string input) {
 
-        std::wcout << HTTP_methoods::AsIs(L"<h1 align = \"center\"> AeroPhlot tickets </h1>");
+        std::cout << HTTP_methoods::AsIs("<h1 align = \"center\"> AeroPhlot tickets </h1>");
 
 
-        /*std::wcout << HTTP_methoods::Paragrah(L"align = \"center\"", 
-                HTTP_methoods::Form(L"METHOD = \"POST\" action = AeroPhlot.cgi", 
-                    HTTP_methoods::Paragrah(L"", L"Город вылета<br>") +
-                        HTTP_methoods::Select(L"name=\"Departure\"", { L"Moscow", L"Samara", L"Krasnoyarsk", L"Ulyanovsk", L"Saint-Peterburg", L"Rostov-na-Donu", L"Volgograd", L"Sochi", L"Kazan", L"Saratov", L"Novosibirsk" })+L"<br>" +
-                    HTTP_methoods::Paragrah(L"", L"Город прилета<br>") +
-                        HTTP_methoods::Select(L"name=\"Arrive\"", { L"Moscow", L"Samara", L"Krasnoyarsk", L"Ulyanovsk", L"Saint-Peterburg", L"Rostov-na-Donu", L"Volgograd", L"Sochi", L"Kazan", L"Saratov", L"Novosibirsk" }) + L"\n<br>\n<br>\n" +
-                   L"<input type = \"submit\"; style=\"background-color: green\"; value = \"выбрать время\">")
-        );*/
+        std::cout << HTTP_methoods::Paragrah("align = \"center\"",
+             "<br> <b> For confirmation you person please send some file above : </b> " +
+            HTTP_methoods::Form("enctype =\"multipart/form-data\" method = \"POST\" action = /cgi-bin/AeroPhlot.cgi ",
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"ProfilePic\"> Profile photo:   <\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"ProfilePic\" name = \"ProfilePic\" accept=\"image/jpeg\"> <br><br>") +
 
-        std::wcout << HTTP_methoods::Paragrah(L"align = \"center\"",
-             L"<br> <b> Для подтверждения личности загрузите следующие файлы : </b> " +
-            HTTP_methoods::Form(L"enctype =\"multipart/form-data\" method = \"POST\" action = /cgi-bin/AeroPhlot.cgi ",
-                HTTP_methoods::AsIs(L"<label align = \"left\" for=\"ProfilePic\"> Фото для профиля:   <\label>") +
-                HTTP_methoods::AsIs(L"\n<input type = \"file\" id = \"ProfilePic\" name = \"ProfilePic\" accept=\"image/jpeg\"> <br><br>") +
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"VoiceRec\"> Voice example:    <\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"VoiceRec\" name = \"VoiceRec\" accept = \"audio/*\"> <br><br>") +
 
-                HTTP_methoods::AsIs(L"<label align = \"left\" for=\"VoiceRec\"> Образец голоса:    <\label>") +
-                HTTP_methoods::AsIs(L"\n<input type = \"file\" id = \"VoiceRec\" name = \"VoiceRec\" accept = \"audio/*\"> <br><br>") +
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"VideoRec\"> Video example:    <\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"VideoRec\" name = \"VideoRec\" accept=\"video/*\"> <br><br>") +
 
-                HTTP_methoods::AsIs(L"<label align = \"left\" for=\"VideoRec\"> Образец видео с вами:    <\label>") +
-                HTTP_methoods::AsIs(L"\n<input type = \"file\" id = \"VideoRec\" name = \"VideoRec\" accept=\"video/*\"> <br><br>") +
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"PersonalDocument\"> personal document scan (.pdf):    <\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"PersonalDocument\" name = \"PersonalDocument\" accept=\"application/pdf\"> <br><br><br>") +
 
-                HTTP_methoods::AsIs(L"<label align = \"left\" for=\"PersonalDocument\"> Сканы всех страниц паспорта в формате pdf:    <\label>") +
-                HTTP_methoods::AsIs(L"\n<input type = \"file\" id = \"PersonalDocument\" name = \"PersonalDocument\" accept=\"application/pdf\"> <br><br><br>") +
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"TXT_file\"> Your resume in text file (.txt):    <\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"TXT_file\" name = \"TXT_file\" accept=\"> <br><br><br>") +
 
-                HTTP_methoods::AsIs(L"<label align = \"left\" for=\"Archive\"> Если по какой-либо причине файл/ы не получается загрузить,<br> отправьте их архивом воспользовавшись кнопкой снизу:<br><\label>") +
-                HTTP_methoods::AsIs(L"\n<input type = \"file\" id = \"Archive\" name = \"Archive\" accept=\"application/zip, application/x-gzip\"> <br>") +
+                HTTP_methoods::AsIs("<label align = \"left\" for=\"Archive\"> If u have a problem with file uploading,<br> send it in archive by clicking button below:<br><\label>") +
+                HTTP_methoods::AsIs("\n<input type = \"file\" id = \"Archive\" name = \"Archive\" accept=\"application/zip, application/x-gzip\"> <br>") +
 
 
-                HTTP_methoods::AsIs(L"\n<br><br>\n <input type = \"submit\"; style=\"width: 10cm; height: 1cm\"; value = \"Загрузить\">\n")    
+                HTTP_methoods::AsIs("\n<br><br>\n <input type = \"submit\"; style=\"width: 10cm; height: 1cm\"; value = \"Upload\">\n")    
             )
         );
 
-        std::wcout <<
-            HTTP_methoods::AsIs(L"\n</body>\n<\HTML>");
-            /// L"<select id = \"fruits\" name = \"fruits\"> <option value = \"apple\"> Яблоко </option> <option value = \"banana\"> Банан </option> <option value = \"orange\"> Апельсин </option> </select>");
+        std::cout <<
+            HTTP_methoods::AsIs("\n</body>\n<\HTML>");
+            /// "<select id = \"fruits\" name = \"fruits\"> <option value = \"apple\"> Яблоко </option> <option value = \"banana\"> Банан </option> <option value = \"orange\"> Апельсин </option> </select>");
     }
 
     bool AuthService(std::pair<std::string, std::string> AuthDATa) {
@@ -114,7 +108,7 @@
         std::ifstream ifstr(accounts_path);
 
         if (!ifstr) {
-            std::wcout << L"Конфигурационный файл не существует<br>";
+            std::cout << "config file doesn`t exist <br>";
 
             //Создаем файл с AuthDATa внутри
             std::ofstream ofstr(accounts_path);
@@ -145,21 +139,21 @@
                         siteLogicRun(AuthDATa.first);
                     }
                     else {
-                        std::wcout << HTTP_methoods::Paragrah(L"align = \"center\"", L"Некорректный пароль" +
-                                HTTP_methoods::Form(L"METHOD = \"POST\" action = Autorization.cgi",
-                                    HTTP_methoods::AsIs(L"<input type = \"submit\"; style=\"background-color: red\"; value = \"ВЕРНУТЬСЯ НАЗАД\">"))
+                        std::cout << HTTP_methoods::Paragrah("align = \"center\"", "wrong password" +
+                                HTTP_methoods::Form("METHOD = \"POST\" action = Autorization.cgi",
+                                    HTTP_methoods::AsIs("<input type = \"submit\"; style=\"background-color: red\"; value = \"to mainPage\">"))
                         );
 
 
                     }
                 }
                 else {
-                    std::wcout << HTTP_methoods::Paragrah(L"", L"НЕ НАЙДЕН ПОЛЬЗОВАТЕЛЬ С ТАКИМИ ДАННЫМИ\n");
-                    std::wcout <<
-                        HTTP_methoods::Form(L"METHOD = \"POST\" action = UserRegistration.cgi",
+                    std::cout << HTTP_methoods::Paragrah("", "wrong user or pass\n");
+                    std::cout <<
+                        HTTP_methoods::Form("METHOD = \"POST\" action = UserRegistration.cgi",
 
-                            HTTP_methoods::Paragrah(L"align = \"center\"",
-                                HTTP_methoods::AsIs(L"<input type = \"submit\"; style=\"background-color: Yellow\"; value = \"Зарегистрировать нового пользователя\">")
+                            HTTP_methoods::Paragrah("align = \"center\"",
+                                HTTP_methoods::AsIs("<input type = \"submit\"; style=\"background-color: Yellow\"; value = \"log in\">")
                             )
                         );
                     }
@@ -170,13 +164,13 @@
 
 
     int main() {
-        setlocale(LC_ALL, "Russian");
 
         mainFunc::RunMainFunc();
 
         std::string body,
             action,
-            CONTENT;
+            CONTENT,
+            extBody;
 
         char buff;
 
@@ -184,54 +178,76 @@
 
 
         action = getenv("REQUEST_URI");
-        new WebLogger("\nREQUEST_URI is: " + action);
-
-        std::wcout << HTTP_methoods::Paragrah(L"align = \"center\"", HTTP_methoods::StringToWString("try to read content"));
+        new WebLogger("REQUEST_URI is: " + action);
 
 
+        std::string RequestMethod = getenv("REQUEST_METHOD");
 
-       std::string RequestMethod = getenv("REQUEST_METHOD");
-       std::string ContentType = getenv("CONTENT_TYPE");
-       std::string ContentLength = getenv("CONTENT_LENGTH");
+        std::string ContentType = getenv("CONTENT_TYPE");
+        std::string ContentLength = getenv("CONTENT_LENGTH");
+        std::string SERVER_PROTOCOL = getenv("SERVER_PROTOCOL");
 
-       new WebLogger("ContentType: " + ContentType);
-       new WebLogger("ContentLength: " + ContentLength);
-       new WebLogger("RequestMethod: " + RequestMethod);
-       new WebLogger("action: " + action);
+
+        new WebLogger("ContentType: " + ContentType);
+        new WebLogger("ContentLength: " + ContentLength);
+        new WebLogger("RequestMethod: " + RequestMethod);
+        new WebLogger("action: " + action);
+        new WebLogger("SERVER_PROTOCOL: " + action);
+
+        new WebLogger("finishing of getting env");
 
 
 
         if (RequestMethod != "GET" && action == "/cgi-bin/AeroPhlot.cgi") {
 
+            uint64_t strleng = atoi(ContentLength.c_str());
             std::cin >> body;
 
-            new WebLogger("body: " + body);
+            while (strleng) {
+                std::cin >> buff;
+                extBody.push_back(buff);
+                strleng--;
+            }
+           // new WebLogger("std::cin: " + extBody);
+
+            new WebLogger("BODY: " + body);
 
             std::string Name,
-                        Password;
+                Password;
 
             char* cPassword[20];
 
 
-            
+
             if (body.find('%') != body.npos) {
-                std::wcout << HTTP_methoods::Paragrah(L"align = \"center\"", L"Логин и/или пароль содержат недопустимые символы" +
-                    HTTP_methoods::Form(L"METHOD = \"POST\" action = Autorization.cgi",
-                        HTTP_methoods::AsIs(L"<input type = \"submit\"; style=\"background-color: red\"; value = \"ВЕРНУТЬСЯ НАЗАД\">"))
+
+                std::cout << HTTP_methoods::Paragrah("align = \"center\"", "login or pass contain forbidden symbol" +
+                    HTTP_methoods::Form("METHOD = \"POST\" action = Autorization.cgi",
+                        HTTP_methoods::AsIs("<input type = \"submit\"; style=\"background-color: red\"; value = \"back to mainPage\">"))
                 );
-                std::wcout << HTTP_methoods::AsIs(L"\n</body>\n<\HTML>");
-            }else{
-
-
+                std::cout << HTTP_methoods::AsIs("\n</body>\n<\HTML>");
+            }
+            else {
                 if (body.find("WebKitFormBoundary") != body.npos) {
+                    std::cout << HTTP_methoods::AsIs("<h1 align = \"center\"> AeroPhlot tickets </h1>");
 
+                    std::cout << HTTP_methoods::Paragrah("align = \"center\"",
+                        "<br> <b> Select destination and departure airport : </b> " +
+                        HTTP_methoods::Form("METHOD = \"POST\" action = /cgi-bin/TimeSelect.cgi",
+                            HTTP_methoods::Paragrah("", "Departure Airport<br>") +
+                                HTTP_methoods::Select("name=\"Departure\"", { "Moscow", "Samara", "Krasnoyarsk", "Ulyanovsk", "Saint-Peterburg", "Rostov-na-Donu", "Volgograd", "Sochi", "Kazan", "Saratov", "Novosibirsk" })+"<br>" +
+                            HTTP_methoods::Paragrah("", "Arrival Airport <br>") +
+                                HTTP_methoods::Select("name=\"Arrive\"", { "Moscow", "Samara", "Krasnoyarsk", "Ulyanovsk", "Saint-Peterburg", "Rostov-na-Donu", "Volgograd", "Sochi", "Kazan", "Saratov", "Novosibirsk" }) + "\n<br>\n<br>\n" +
+                            "<input type = \"submit\"; style=\"background-color: green\"; value = \"go to timeSelectPage\">")
+                    );
 
                 }
-                else {
+                else
+                {
                     Name = QueryTo_RawValue("login", body);
                     Password = QueryTo_RawValue("password", body);
 
-                    new WebLogger("User trying to auth with login: \"" + Name + "\" and pass: \"" + Password +"\"");
+                    new WebLogger("User trying to auth with login: \"" + Name + "\" and pass: \"" + Password + "\"");
 
 
 
@@ -243,8 +259,13 @@
 
                     AuthService(std::make_pair(Name, CrypthPass.Crypted));
                 }
-                
+
             }
-        };
+            }
+            else {
+                std::cout << HTTP_methoods::Paragrah("align = \"center\"", HTTP_methoods::StringToWString("it is a GET METHOD"));
+
+            }
+        
         return 0;
     }

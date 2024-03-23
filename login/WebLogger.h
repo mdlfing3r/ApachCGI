@@ -11,4 +11,5 @@ class WebLogger {
 public:
         WebLogger(std::string message);
         const std::string Path = "listing.log";
+        ~WebLogger();
 };

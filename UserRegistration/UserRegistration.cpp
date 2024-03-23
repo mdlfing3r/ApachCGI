@@ -21,40 +21,40 @@ public:
 
 
 void mainFunc::RunMainFunc() {
-    std::wcout << L"Content-Type: text/html; charset=windows-1251" + std::wstring(L"\n\n");
+    std::cout << "Content-Type: text/html; charset=windows-1251" + std::string("\n\n");
 
-    std::wcout <<
-        AsIs(L"<!DOCTYPE HTML>") +
+    std::cout <<
+        AsIs("<!DOCTYPE HTML>") +
 
-        HTML(L"",
-            Head(L"",
-                L"<meta encoding = \"windows-1251\">" +
-                AsIs(L"\n<title> login page </title>")
+        HTML("",
+            Head("",
+                "<meta encoding = \"windows-1251\">" +
+                AsIs("\n<title> login page </title>")
             ) +
-            Body(L"align = \"center\"",
-                Form(L"METHOD = \"POST\"",
-                    AsIs(L"<h1 align = \"center\" > Добавление нового пользователя </h1>\n") +
-                    Paragrah(L"align = \"center\"",
-                        Paragrah(L"", L"Логин") +
-                        AsIs(L"<input name = \"text\"> ") +
-                        Paragrah(L"", L"Пароль") +
-                        AsIs(L"<input name = \"pass\">")
+            Body("align = \"center\"",
+                Form("METHOD = \"POST\"",
+                    AsIs("<h1 align = \"center\" > Create new account </h1>\n") +
+                    Paragrah("align = \"center\"",
+                        Paragrah("", "Login") +
+                        AsIs("<input name = \"text\"> ") +
+                        Paragrah("", "Password") +
+                        AsIs("<input name = \"pass\">")
                     ) +
-                    Paragrah(L"align = \"center\"",
-                        AsIs(L"<input type = \"submit\"; style=\"background-color: green\"; value = \"Создать\">")
+                    Paragrah("align = \"center\"",
+                        AsIs("<input type = \"submit\"; style=\"background-color: green\"; value = \"Create\">")
                     )
                 )+
-                Form(L"METHOD = \"POST\" action = Autorization.cgi",
+                Form("METHOD = \"POST\" action = Autorization.cgi",
 
-                    Paragrah(L"align = \"center\"",
-                        AsIs(L"<input type = \"submit\"; style=\"background-color: white\"; value = \"к авторизации\">")
+                    Paragrah("align = \"center\"",
+                        AsIs("<input type = \"submit\"; style=\"background-color: white\"; value = \"back to autorization\">")
                     )
                 )+
 
-                Form(L"METHOD = \"POST\" action = MainPage.cgi",
+                Form("METHOD = \"POST\" action = MainPage.cgi",
                    
-                    Paragrah(L"align = \"center\"",
-                        AsIs(L"<input type = \"submit\"; style=\"background-color: Yellow\"; value = \"На главную\">")
+                    Paragrah("align = \"center\"",
+                        AsIs("<input type = \"submit\"; style=\"background-color: Yellow\"; value = \"back to mainPage\">")
                     )
                 )
             )
@@ -69,13 +69,13 @@ std::string QueryTo_RawValue(std::string Name_var, std::string query) {
     std::string retval;
     size_t VarDev_Pos = query.find(Name_var);
 
-    if (VarDev_Pos != std::wstring::npos) {
+    if (VarDev_Pos != std::string::npos) {
         std::string tempVar = query.substr(VarDev_Pos + Name_var.size() + 1, query.size());
         retval = tempVar;
 
         auto DeviderPos = tempVar.find('&');
 
-        if (DeviderPos != std::wstring::npos) {
+        if (DeviderPos != std::string::npos) {
             retval = tempVar.substr(0, DeviderPos);
         }
     }
@@ -130,7 +130,7 @@ int main() {
             Password;
 
         if (body.find('%') != body.npos)
-            std::wcout << HTTP_methoods::Paragrah(L"", L"<font> <b> Логин и/или пароль содержат недопустимые символы <b> </font>");
+            std::cout << HTTP_methoods::Paragrah("", "<font> <b> Login or password contain forbidden symbol<b> </font>");
         else {
             Name = QueryTo_RawValue("text", body);
 
@@ -146,13 +146,13 @@ int main() {
                 ofstr.close();
 
 
-                std::wstring success_str = L"Пользователь " + HTTP_methoods::StringToWString(Name) + L" успешно добавлен!";
-                std::wcout << HTTP_methoods::Paragrah(L"", success_str);
+                std::string success_str = " User " + HTTP_methoods::StringToWString(Name) + "successfully created!";
+                std::cout << HTTP_methoods::Paragrah("", success_str);
 
 
             }
             else {
-                std::wcout << HTTP_methoods::Paragrah(L"", L"Данное имя уже занято\n");
+                std::cout << HTTP_methoods::Paragrah("", "This name already used\n");
             }
 
         }

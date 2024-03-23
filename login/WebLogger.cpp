@@ -7,6 +7,16 @@ WebLogger::WebLogger(std::string message) {
 
 	std::ofstream ofs;
 	ofs.open(WebLogger::Path, std::ios::app);
-	ofs << message << " Time:" << CurTim;
+	ofs <<"Time:" << CurTim.substr(0, CurTim.size()-5) << message << std::endl;
 	ofs.close();
+	this->~WebLogger();
 }
+
+WebLogger::~WebLogger()
+{
+	//std::ofstream ofs;
+	//ofs.open(WebLogger::Path, std::ios::app);
+	//ofs << "Distructor is run" << std::endl;
+	//ofs.close();
+}
+

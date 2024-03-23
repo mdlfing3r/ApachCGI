@@ -1,66 +1,66 @@
 #pragma once
 #include "SimpleHTTPConstruct.h"
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(std::wstring attributes, std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Paragrah(std::string attributes, std::string content)
 {
-    std::wstring retString;
-    retString = L"\n<p" + (attributes != L"" ? L" " + attributes + L">" : L">") + L"\n" + content + L"\n</p>";
+    std::string retString;
+    retString = "\n<p" + (attributes != "" ? " " + attributes + ">" : ">") + "\n" + content + "\n</p>";
     return retString;
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(const std::string& s)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::StringToWString(const std::string& s)
 {
-    std::wstring retWstr(s.begin(), s.end());
+    std::string retWstr(s.begin(), s.end());
     return retWstr;
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Meta(std::wstring attributes)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Meta(std::string attributes)
 {
-    return L"<meta" + (attributes == L"" ? L">" : L" " + attributes + L" >") + L"\n";
+    return "<meta" + (attributes == "" ? ">" : " " + attributes + " >") + "\n";
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Body(std::wstring attributes, std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Body(std::string attributes, std::string content)
 {
-    return L"<body" + (attributes == L"" ? L">" : L" " + attributes + L" >") + content + L"\n</body>";
+    return "<body" + (attributes == "" ? ">" : " " + attributes + " >") + content + "\n</body>";
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Head(std::wstring attributes, std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Head(std::string attributes, std::string content)
 {
-    return L"<head" + (attributes == L"" ? L">" : attributes + L" >") + L"\n" + content + L"\n</head>\n";
+    return "<head" + (attributes == "" ? ">" : attributes + " >") + "\n" + content + "\n</head>\n";
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::HTML(std::wstring attributes, std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::HTML(std::string attributes, std::string content)
 {
-    return L"\n<html" + (attributes == L"" ? L">" : attributes + L" >") + L"\n" + content + L"\n</html>";
+    return "\n<htm" + (attributes == "" ? ">" : attributes + " >") + "\n" + content + "\n</html>";
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Form(std::wstring  attributes, std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Form(std::string  attributes, std::string content)
 {
-    return L"\n<form" + (attributes == L"" ? L">" : L" "+ attributes + L" >") + content + L"</form>";
+    return "\n<form" + (attributes == "" ? ">" : " "+ attributes + " >") + content + "</form>";
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Select(std::wstring attributes, std::vector<std::wstring> options)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Select(std::string attributes, std::vector<std::string> options)
 {
-    std::wstring options_wstr;
+    std::string options_wstr;
     
     for (auto& it : options) {
-        options_wstr += L"<option value =\"" + it + L"\"> " + it + L" </option>\n";
+        options_wstr += "<option value =\"" + it + "\"> " + it + " </option>\n";
     }
 
 
-    return L"\n<select" + (attributes == L"" ? L">" : L" " + attributes + L" >") + options_wstr + L"</select>";
+    return "\n<select" + (attributes == "" ? ">" : " " + attributes + " >") + options_wstr + "</select>";
 }
 
 
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(std::wstring content)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::AsIs(std::string content)
 {
     return content;
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::Img(std::wstring params)
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::Img(std::string params)
 {
-    return L"<img " + params + L" >";
+    return "<img " + params + " >";
 }
 
 std::map<std::string, std::string> SimpleHTTPConstruct::SimpleHTTPConstruct::GetCookies() {
@@ -90,11 +90,11 @@ std::map<std::string, std::string> SimpleHTTPConstruct::SimpleHTTPConstruct::Get
 	return res;
 }
 
-std::wstring SimpleHTTPConstruct::SimpleHTTPConstruct::rawURLDecode(std::wstring raw) {
+std::string SimpleHTTPConstruct::SimpleHTTPConstruct::rawURLDecode(std::string raw) {
     int NumCntr = 0,
         TempNum = 0;
 
-    std::wstring loginHex,
+    std::string loginHex,
         passHex,
         temp,
         retval;
